@@ -1,0 +1,76 @@
+set serveroutput on
+
+declare
+v_row constant number :=7;
+v_col constant number :=7;
+
+begin
+    for i in 1..v_row
+    loop
+        for j in 1..v_col
+        loop
+            if (j = i or j = v_row+1-i)
+                then dbms_output.put('*');
+            else
+                dbms_output.put(' ');
+            end if;
+        end loop;
+        dbms_output.put_line('');
+    end loop;
+end;
+/
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+declare
+v_row constant number :=7;
+v_col constant number :=7;
+
+begin
+ for i in 1..v_row
+    loop
+        for j in 1..v_col
+        loop
+            if (j<=i and j>= (v_row+1-i)) or (j>=i and j <= (v_row+1-i))
+                then dbms_output.put('*');
+            else
+                dbms_output.put(' ');
+            end if;
+        end loop;
+        dbms_output.put_line('');
+    end loop;
+end;
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+create or replace function check_pifaqor_rules(n1 number, n2 number, n3 number) return VARCHAR2
+is
+begin
+    if(n1*n1 + n2*n2 = n3*n3) then
+        return 'true';
+    elsif(n2*n2 + n3*n3 = n1*n1) then
+        return 'true';
+    elsif(n1*n1 + n3*n3 = n2*n2) then
+        return 'true';
+    end if;
+        return 'false';
+end;
+select check_pifaqor_rules(3,4,5) from dual;
+select check_pifaqor_rules(6,8,10) from dual;
+select check_pifaqor_rules(3,12,20) from dual;
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+create or replace function net_salary(p_salary in number, p_comm in number) return number
+is
+begin
+    return p_salary-p_salary*nvl(p_comm, 0);
+end;
+/
+select 
+last_name, salary, commission_pct, net_salary(p_salary=>salary, p_comm=>commission_pct) as "Net Salary"
+from HR.EMPLOYEES;
+/
+--------------------------------------------------------------------------------------------------------------------------------------
+
